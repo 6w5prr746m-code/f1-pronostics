@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -10,17 +10,48 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-orbitron);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-orbitron), var(--font-geist-sans), sans-serif;
+}
+
+/* Cinematic radial glow used behind hero sections. */
+.glow-backdrop {
+  position: relative;
+}
+
+.glow-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(60% 50% at 15% 0%, rgba(220, 38, 38, 0.25), transparent 60%),
+    radial-gradient(50% 40% at 100% 20%, rgba(37, 99, 235, 0.15), transparent 60%);
+  pointer-events: none;
+}
+
+/* Glass card used throughout the app for a premium, layered feel. */
+.glass-card {
+  background: rgba(23, 23, 23, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Horizontal scroll rail with hidden scrollbar, Netflix-style. */
+.scroll-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-rail::-webkit-scrollbar {
+  display: none;
 }

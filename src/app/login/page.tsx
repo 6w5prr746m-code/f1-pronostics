@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Mail, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Logo } from "@/components/Logo";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -33,18 +37,35 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-950 px-4 text-white">
-      <div className="w-full max-w-sm">
+    <main className="glow-backdrop relative flex flex-1 flex-col items-center justify-center px-4">
+      <Link href="/" className="absolute top-8 left-1/2 z-10 -translate-x-1/2">
+        <Logo />
+      </Link>
+
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="glass-card relative z-10 w-full max-w-sm rounded-2xl p-8"
+      >
         <h1 className="mb-2 text-2xl font-bold">Connexion</h1>
         <p className="mb-6 text-sm text-neutral-400">
           Reçois un lien magique par email, aucun mot de passe requis.
         </p>
 
         {status === "sent" ? (
-          <p className="rounded-md bg-neutral-900 p-4 text-sm">
-            Un lien de connexion a été envoyé à <strong>{email}</strong>.
-            Vérifie ta boîte mail (et tes spams).
-          </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.03] p-4 text-sm"
+          >
+            <Mail size={18} className="mt-0.5 shrink-0 text-red-500" />
+            <p>
+              Un lien de connexion a été envoyé à{" "}
+              <strong className="text-white">{email}</strong>. Vérifie ta
+              boîte mail (et tes spams).
+            </p>
+          </motion.div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <input
@@ -53,21 +74,27 @@ export default function LoginPage() {
               placeholder="toi@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm outline-none focus:border-red-500"
+              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-sm outline-none transition focus:border-red-500"
             />
             <button
               type="submit"
               disabled={status === "sending"}
-              className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold transition hover:bg-red-500 disabled:opacity-50"
+              className="group flex items-center justify-center gap-2 rounded-lg bg-red-600 px-3 py-3 text-sm font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-500 disabled:opacity-50"
             >
               {status === "sending" ? "Envoi..." : "Recevoir le lien magique"}
+              {status !== "sending" && (
+                <ArrowRight
+                  size={16}
+                  className="transition group-hover:translate-x-1"
+                />
+              )}
             </button>
             {status === "error" && errorMessage && (
               <p className="text-sm text-red-400">{errorMessage}</p>
             )}
           </form>
         )}
-      </div>
+      </motion.div>
     </main>
   );
 }
